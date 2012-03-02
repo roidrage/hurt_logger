@@ -43,4 +43,6 @@ class HurtLogger
   end
 end
 
-HurtLogger.new.run
+if ARGV[0]
+  HurtLogger.new.run(port: ARGV[0])
+end

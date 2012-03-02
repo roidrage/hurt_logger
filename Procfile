@@ -1,1 +1,1 @@
-logger: bundle exec ruby lib/hurt_logger.rb
+logger: bundle exec ruby lib/hurt_logger.rb $PORT
