@@ -60,11 +60,9 @@ class HurtLogger
     end
 
     def receive_data(data)
-      p data
-      @data << data
-      if @data[-1] == "\n"
-        maybe_publish(@data)
-        @data = ""
+      data.split(/(.*)\r?\n/).each do |line|
+        next if line.empty?
+        maybe_publish(line)
       end
     end
 

@@ -39,14 +39,9 @@ describe HurtLogger::Receiver do
   let(:receiver) { HurtLogger::Receiver.new nil }
 
   describe "when receiving data" do
-    it "should buffer data when there's no \\n" do
-      receiver.receive_data("hello")
-      receiver.data.should == 'hello'
-    end
-
-    it "should publish data when there's a \\n" do
-      receiver.should_receive(:maybe_publish)
-      receiver.receive_data("hello\n")
+    it "should split the lines and publish every single line" do
+      receiver.should_receive(:maybe_publish).twice
+      receiver.receive_data("hello\nworld")
     end
   end
 
