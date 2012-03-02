@@ -5,7 +5,7 @@ require 'eventmachine'
 
 class HurtLogger
   @@defaults = {
-    port: 5021,
+    port: 80,
     drains: [],
     filters: []
   }
