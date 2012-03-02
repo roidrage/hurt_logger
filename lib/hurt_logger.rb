@@ -60,6 +60,7 @@ class HurtLogger
     end
 
     def receive_data(data)
+      p data
       @data << data
       if @data[-1] == "\n"
         maybe_publish(@data)
