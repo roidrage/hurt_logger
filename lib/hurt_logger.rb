@@ -84,5 +84,5 @@ class HurtLogger
 end
 
 if ARGV[0]
-  HurtLogger.new.run(port: ARGV[0])
+  EM.run {HurtLogger.new.run(port: ARGV[0])}
 end
