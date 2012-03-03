@@ -55,5 +55,12 @@ describe HurtLogger::Receiver do
       receiver.filters << "heroku.router"
       receiver.receive_data("heroku.router something something\n")
     end
+
+    it "should publish to the drain when the filter didn't match" do
+      drain.should_receive(:send_data)
+      receiver.drains << drain
+      receiver.filters << "heroku.router"
+      receiver.receive_data("heroku.nginx\n")
+    end
   end
 end

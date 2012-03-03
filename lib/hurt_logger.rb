@@ -52,7 +52,8 @@ class HurtLogger
 
     def initialize(*args)
       super
-      @drains = @filters = []
+      @drains = []
+      @filters = []
     end
 
     def post_init
