@@ -1,5 +1,5 @@
 require 'em-hiredis'
-require 'hurt_logger'
+require_relative '../hurt_logger'
 
 class HurtLogger
   class Tail
