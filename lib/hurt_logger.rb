@@ -22,7 +22,8 @@ class HurtLogger
     connect_to_drains
 
     EventMachine.start_server('0.0.0.0', options[:port], Receiver) do |receiver|
-      receiver.filters = options[:filters]       
+      receiver.filters = options[:filters]
+      receiver.drains << RedisDrain.new
     end
   end
 
@@ -69,7 +70,7 @@ class HurtLogger
 
     def maybe_publish(data)
       return if filters_match?(data)
-      drains.each {|drain| drain.send_data(data)}
+      drains.each {|drain| drain.publish(data)}
     end
 
     def filters_match?(data)
@@ -80,9 +81,22 @@ class HurtLogger
   end
 
   class Drain < EventMachine::Connection
+    def publish(line)
+      send_data(line)
+    end
   end
-end
 
-if ARGV[0]
-  EM.run {HurtLogger.new.run(port: ARGV[0])}
+  class RedisDrain
+    def redis
+      @@redis ||= EM::Hiredis.connect(ENV['REDISTOGO_URL'])
+    end
+
+    def name
+      "hurt_logger.recent_logs"
+    end
+
+    def publish(line)
+      redis.publish(name, line)
+    end
+  end
 end

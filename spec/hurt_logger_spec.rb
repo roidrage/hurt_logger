@@ -50,17 +50,28 @@ describe HurtLogger::Receiver do
     let(:receiver) { HurtLogger::Receiver.new nil }
 
     it "shouldn't publish when a filter matched" do
-      drain.should_not_receive(:send_data)
+      drain.should_not_receive(:publish)
       receiver.drains << drain
       receiver.filters << "heroku.router"
       receiver.receive_data("heroku.router something something\n")
     end
 
     it "should publish to the drain when the filter didn't match" do
-      drain.should_receive(:send_data)
+      drain.should_receive(:publish)
       receiver.drains << drain
       receiver.filters << "heroku.router"
       receiver.receive_data("heroku.nginx\n")
+    end
+
+    describe "caching the most recent log items" do
+      it "should publish to the redis drain" do
+        EM.run {
+          receiver.drains << HurtLogger::RedisDrain.new
+          HurtLogger::RedisDrain.any_instance.should_receive(:publish)
+          receiver.receive_data("heroku\n")
+          EM.stop
+        }
+      end
     end
   end
 end
