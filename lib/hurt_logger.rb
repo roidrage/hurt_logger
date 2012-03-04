@@ -2,6 +2,7 @@ require 'bundler'
 Bundler.setup
 
 require 'eventmachine'
+require 'em-hiredis'
 require 'uri'
 
 class HurtLogger
