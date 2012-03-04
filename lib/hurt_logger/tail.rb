@@ -7,8 +7,10 @@ class HurtLogger
 
     def run
       %w{INT TERM QUIT}.each {|signal|
-        EM.stop
-        exit
+        trap signal do
+          EM.stop
+          exit
+        end
       }
 
       redis.subscribe(name)
