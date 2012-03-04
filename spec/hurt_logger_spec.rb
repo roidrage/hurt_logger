@@ -63,7 +63,7 @@ describe HurtLogger::Receiver do
       receiver.receive_data("heroku.nginx\n")
     end
 
-    describe "caching the most recent log items" do
+    describe "locally publishing log entries" do
       it "should publish to the redis drain" do
         EM.run {
           receiver.drains << HurtLogger::RedisDrain.new
@@ -72,6 +72,37 @@ describe HurtLogger::Receiver do
           EM.stop
         }
       end
+    end
+  end
+
+  describe "running the server" do
+    before do
+      ENV['HURTLOGGER_DRAINS'] = nil
+      ENV['HURTLOGGER_FILTERS'] = nil
+    end
+
+    it "should create a server" do
+      EM.should_receive(:start_server)
+      HurtLogger.new.run
+    end
+
+    it "should connect to drains based on ENV" do
+      EM.run {
+        ENV['HURTLOGGER_DRAINS'] = 'syslog://logs.papertrailapp.com:54321'
+        EM.should_receive(:connect).with 'logs.papertrailapp.com', 54321, HurtLogger::Drain
+        HurtLogger.new.run
+        EM.stop
+      }
+    end
+
+    it "should add filters from ENV" do
+      EM.run {
+        ENV['HURTLOGGER_FILTERS'] = 'heroku.router,heroku.nginx'
+        logger = HurtLogger.new
+        logger.run
+        logger.options[:filters].should include("heroku.router")
+        EM.stop
+      }
     end
   end
 end
