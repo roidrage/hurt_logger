@@ -87,7 +87,6 @@ class HurtLogger
     end
 
     def receive_data(data)
-      puts data
       data.split(/(.*)\r?\n/).each do |line|
         next if line.empty?
         maybe_publish(line)
