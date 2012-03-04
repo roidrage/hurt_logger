@@ -6,6 +6,11 @@ class HurtLogger
     include Redis
 
     def run
+      trap :INT do
+        EM.stop
+        exit
+      end
+
       redis.subscribe(name)
       redis.on(:message) do |channel, message|
         puts message

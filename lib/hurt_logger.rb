@@ -65,9 +65,9 @@ class HurtLogger
 
   def start_server
     EventMachine.start_server('0.0.0.0', options[:port], Receiver) do |receiver|
+      puts "Listening on port #{options[:port]}"
       receiver.filters = options[:filters]
       receiver.drains << RedisDrain.new
-      self.receiver = receiver
     end
   end
 
