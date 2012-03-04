@@ -65,8 +65,8 @@ class HurtLogger
   end
 
   def start_server
+    puts "Listening on port #{options[:port]}"
     EventMachine.start_server('0.0.0.0', options[:port], Receiver) do |receiver|
-      puts "Listening on port #{options[:port]}"
       receiver.filters = options[:filters]
       receiver.drains << RedisDrain.new
     end
@@ -87,9 +87,9 @@ class HurtLogger
     end
 
     def receive_data(data)
+      puts data
       data.split(/(.*)\r?\n/).each do |line|
         next if line.empty?
-        puts line
         maybe_publish(line)
       end
     end
