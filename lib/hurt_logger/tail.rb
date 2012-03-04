@@ -18,3 +18,7 @@ class HurtLogger
     end
   end
 end
+
+if ARGV[0] == 'tail'
+  HurtLogger::Tail.new.run
+end
