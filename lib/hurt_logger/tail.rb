@@ -8,6 +8,7 @@ class HurtLogger
     def run
       %w{INT TERM QUIT}.each {|signal|
         trap signal do
+          puts "Caught signal #{signal}. Exiting..."
           EM.stop
           exit
         end
