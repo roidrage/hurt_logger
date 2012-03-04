@@ -129,5 +129,5 @@ class HurtLogger
 end
 
 if ARGV[0] == "run"
-  HurtLogger.new.run(port: ARGV[1])
+  EM.run { HurtLogger.new.run(port: ARGV[1]) }
 end
