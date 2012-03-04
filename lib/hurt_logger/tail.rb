@@ -12,6 +12,7 @@ class HurtLogger
       end
 
       redis.subscribe(name)
+      puts "Listening for messages..."
       redis.on(:message) do |channel, message|
         puts message
       end
@@ -20,5 +21,5 @@ class HurtLogger
 end
 
 if ARGV[0] == 'tail'
-  lM.run {HurtLogger::Tail.new.run}
+  EM.run {HurtLogger::Tail.new.run}
 end
