@@ -20,5 +20,5 @@ class HurtLogger
 end
 
 if ARGV[0] == 'tail'
-  HurtLogger::Tail.new.run
+  lM.run {HurtLogger::Tail.new.run}
 end
