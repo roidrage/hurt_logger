@@ -110,15 +110,18 @@ class HurtLogger
     end
   end
 
-  class RedisDrain
+  module Redis
     def redis
-      @@redis ||= EM::Hiredis.connect(ENV['REDISTOGO_URL'])
+      @redis ||= EM::Hiredis.connect(ENV['REDISTOGO_URL'])
     end
 
     def name
       "hurt_logger.recent_logs"
     end
+  end
 
+  class RedisDrain
+    include HurtLogger::Redis
     def publish(line)
       redis.publish(name, line)
     end
@@ -126,5 +129,5 @@ class HurtLogger
 end
 
 if ARGV[0] == "run"
-  HurtLogger.new().run
+  HurtLogger.new.run(port: ARGV[1])
 end

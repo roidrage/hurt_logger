@@ -1,1 +1,2 @@
-logger: bundle exec ruby lib/hurt_logger.rb $PORT
+logger: bundle exec ruby lib/hurt_logger.rb run $PORT
+tail: bundle exec ruby lib/hurt_logger/tail.rb run

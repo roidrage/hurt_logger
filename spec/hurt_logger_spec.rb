@@ -101,6 +101,7 @@ describe HurtLogger::Receiver do
         logger = HurtLogger.new
         logger.run
         logger.options[:filters].should include("heroku.router")
+        logger.options[:filters].should include("heroku.nginx")
         EM.stop
       }
     end
