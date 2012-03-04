@@ -6,10 +6,10 @@ class HurtLogger
     include Redis
 
     def run
-      trap :INT do
+      %w{INT TERM QUIT}.each {|signal|
         EM.stop
         exit
-      end
+      }
 
       redis.subscribe(name)
       puts "Listening for messages..."
